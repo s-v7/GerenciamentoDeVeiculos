@@ -40,7 +40,6 @@ const DataTableSizeDemo = () => {
                   <td>2020</td>
                   <td>"160.000,00"</td>
                 </tr>
-
                 <tr>
                   <td>"63286c1b94a4c4001c3e16bf"</td>
                   <td>"Civic sedan"</td>
@@ -48,7 +47,6 @@ const DataTableSizeDemo = () => {
                   <td>2020</td>
                   <td>"160.000,00"</td>
                 </tr>
-
                 <tr>
                   <td>"63286c1b94a4c4001c3e16bf"</td>
                   <td>"Civic sedan"</td>

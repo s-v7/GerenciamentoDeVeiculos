@@ -44,13 +44,13 @@ const MenuDemo = () => {
                   command: (event) => {
                     event.originalEvent =
                       "../../pages/CadastrarVeiculos/CarrosNovos/createCarros.js";
-                  }
+                  },
                 },
                 {
                   label: "Semi-Novos",
-                  icon: "pi pi-fw pi-car"
-                }
-              ]
+                  icon: "pi pi-fw pi-car",
+                },
+              ],
             },
             {
               label: "Motos",
@@ -61,14 +61,14 @@ const MenuDemo = () => {
                   icon: "pi pi-fw pi-car",
                   command: (event) => {
                     window.location.hash =
-                      "../../pages/CadastrarVeiculos/CarrosNovos/createCarros.js";
-                  }
+                      "../../pages/CadastrarVeiculos/CarrosNovos/createMotos.js";
+                  },
                 },
                 {
                   label: "Semi-Novas",
-                  icon: "pi pi-fw pi-car"
-                }
-              ]
+                  icon: "pi pi-fw pi-car",
+                },
+              ],
             },
             {
               label: "Caminhões",
@@ -79,20 +79,20 @@ const MenuDemo = () => {
                   icon: "pi pi-fw pi-car",
                   command: (event) => {
                     event.location =
-                      "../../pages/CadastrarVeiculos/CarrosNovos/createCarros.js";
-                  }
+                      "../../pages/CadastrarVeiculos/CarrosNovos/createCaminhoes.js";
+                  },
                 },
                 {
                   label: "Semi-Novos",
                   icon: "pi pi-fw pi-car",
                   command: (event) => {
                     event.target =
-                      "../../pages/CadastrarVeiculos/CarrosNovos/createCarrosNovos.html";
-                  }
-                }
-              ]
-            }
-          ]
+                      "../../pages/CadastrarVeiculos/CarrosNovos/createCarrosSemiNovos.html";
+                  },
+                },
+              ],
+            },
+          ],
         },
         {
           label: "Icons",
@@ -105,13 +105,13 @@ const MenuDemo = () => {
             { label: "Twitter", icon: "pi pi-twitter" },
             { label: "Whattsapp", icon: "pi pi-whatsapp" },
             { label: "Youtube", icon: "pi pi-youtube" },
-            { label: "Instagram", icon: "pi pi-instagram" }
-          ]
+            { label: "Instagram", icon: "pi pi-instagram" },
+          ],
         },
         {
-          separator: true
-        }
-      ]
+          separator: true,
+        },
+      ],
     },
     {
       label: "Lista de Veículos",
@@ -122,18 +122,18 @@ const MenuDemo = () => {
           icon: "pi pi-fw pi-align-left",
           command: (event) => {
             event.target =
-              "../../pages/CadastrarVeiculos/CarrosNovos/createCarrosNovos.html";
-          }
+              "../pages/ListaDeVeiculos/VeiculosNovos/listaVeiculosNovos";
+          },
         },
         {
           label: "Semi-Novos",
           icon: "pi pi-fw pi-align-right",
           command: (event) => {
             event.target =
-              "../../pages/CadastrarVeiculos/CarrosNovos/createCarrosNovos.html";
-          }
-        }
-      ]
+              "../pages/ListaDeVeiculos/VeiculosNovos/listaVeiculosSemiNovos";
+          },
+        },
+      ],
     },
     {
       label: "Controle De Veículos",
@@ -146,16 +146,16 @@ const MenuDemo = () => {
             {
               label: "leftRoot",
               icon: "pi pi-fw pi-calendar-plus",
-              url: "https://reactjs.org/"
+              url: "https://reactjs.org/",
             },
             {
               label: "rigthRoot",
               icon: "pi pi-fw pi-calendar-minus",
-              command: (e) => {
+              command: (event) => {
                 window.placeholder = "Silas";
-              }
-            }
-          ]
+              },
+            },
+          ],
         },
         {
           label: "ControleDeGastos",
@@ -163,9 +163,9 @@ const MenuDemo = () => {
           items: [
             {
               label: "Orçamentos",
-              icon: "pi pi-fw pi-calendar-minus"
-            }
-          ]
+              icon: "pi pi-fw pi-calendar-minus",
+            },
+          ],
         },
         {
           label: "Veículos em Manutenção",
@@ -173,13 +173,11 @@ const MenuDemo = () => {
           items: [
             {
               label: "Orçamentos",
-              icon: "pi pi-fw pi-calendar-minus"
+              icon: "pi pi-fw pi-calendar-minus",
             },
-            {},
-            {}
-          ]
-        }
-      ]
+          ],
+        },
+      ],
     },
     {
       label: "Users",
@@ -187,11 +185,11 @@ const MenuDemo = () => {
       items: [
         {
           label: "Novo",
-          icon: "pi pi-fw pi-user-plus"
+          icon: "pi pi-fw pi-user-plus",
         },
         {
           label: "Excluir",
-          icon: "pi pi-fw pi-user-minus"
+          icon: "pi pi-fw pi-user-minus",
         },
         {
           label: "Search",
@@ -203,18 +201,18 @@ const MenuDemo = () => {
               items: [
                 {
                   label: "Print",
-                  icon: "pi pi-fw pi-print"
-                }
-              ]
+                  icon: "pi pi-fw pi-print",
+                },
+              ],
             },
             {
               icon: "pi pi-fw pi-bars",
-              label: "List"
-            }
-          ]
-        }
-      ]
-    }
+              label: "List",
+            },
+          ],
+        },
+      ],
+    },
   ];
   const end = (
     <InputText placeholder="Search" type="text" onClick={() => setApi("")} />
@@ -254,6 +252,5 @@ const MenuDemo = () => {
     </div>
   );
 };
-
 const rootElement = document.getElementById("root");
 ReactDOM.render(<MenuDemo />, rootElement);
