@@ -1,21 +1,16 @@
 {
   "repositório": {
     "tipo": " git ",
-    "url": " git+https://github.com/s-v7/GerenciamentoDeVeiculos "
+    "url": " git+https://github.com/s-v7/GerenciamentoDeVeiculos ",
+    "bugs": {
+      "url": ""
+    },
+    "name": "GerenciamentoDeVeiculos",
+    "description": ""
   },
-  "autor": " Silas Vasconcelos <svasconceloscruz7@gmail.com>",
+  "autor": " Silas Vasconcelos Cruz <svasconceloscruz7@gmail.com>",
   "licença": "",
-  "bugs": {
-    "url": ""
-  },
   "homepage": "",
-  "dependências": {
-    "dotenv": " ^5.0.1 ",
-    "prop-types": " ^15.6.1 ",
-    "reagir": " ^16.3.2 ",
-    "react-dom": " ^16.3.2 ",
-    "webpack": " ^4.8.2 "
-  },
   "dependencies": {
     "axios": "0.27.2",
     "express": "4.18.1",
@@ -29,7 +24,14 @@
     "sequelize": "6.23.0"
   },
   "main": "src/menu/MenuDemo.js",
-  "keywords": [],
-  "name": "gerenciamentodeveiculos",
-  "description": ""
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node start.js"
+  },
+  "engines": {
+    "node": ">=p.q.r",
+    "npm": ">=w.v.u"
+  },
+  "devDependencies": {},
+  "keywords": []
 }
