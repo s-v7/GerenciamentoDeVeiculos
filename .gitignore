@@ -1,1 +1,18 @@
-node_modules
+# Node.js
+node_modules/
+.env
+yarn.lock
+package-lock.json
+
+# System files
+.DS_Store
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+
+# IDEs
+.idea/
+.vscode/
+
