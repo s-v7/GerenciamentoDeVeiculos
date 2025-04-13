@@ -1,0 +1,77 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Cadastrar Veículo</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.6.1/css/bootstrap.min.css">
+</head>
+<body>
+  <div class="container mt-5">
+    <h1 class="mb-4 text-center">🚗 Cadastrar Novo Veículo</h1>
+    <form id="formCadastro">
+      <div class="form-group">
+        <input type="text" id="modelo" class="form-control" placeholder="Modelo" required>
+      </div>
+      <div class="form-group">
+        <input type="text" id="marca" class="form-control" placeholder="Marca" required>
+      </div>
+      <div class="form-group">
+        <input type="number" id="ano" class="form-control" placeholder="Ano" required>
+      </div>
+      <div class="form-group">
+        <select id="tipo" class="form-control" required>
+          <option value="">Selecione o Tipo</option>
+          <option value="novo">Novo</option>
+          <option value="seminovo">Semi-Novo</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <input type="number" step="0.01" id="preco" class="form-control" placeholder="Preço" required>
+      </div>
+      <button type="submit" class="btn btn-primary btn-block">Cadastrar</button>
+    </form>
+  </div>
+
+  <script>
+    const token = localStorage.getItem('token');
+
+    if (!token) {
+      alert('Você precisa estar logado!');
+      window.location.href = 'login.html';
+    }
+
+    const formCadastro = document.getElementById('formCadastro');
+
+    formCadastro.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const veiculo = {
+        modelo: document.getElementById('modelo').value,
+        marca: document.getElementById('marca').value,
+        ano: parseInt(document.getElementById('ano').value),
+        tipo: document.getElementById('tipo').value,
+        preco: parseFloat(document.getElementById('preco').value)
+      };
+
+      const response = await fetch('http://localhost:3000/api/veiculos', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify(veiculo)
+      });
+
+      if (response.ok) {
+        alert('Veículo cadastrado com sucesso!');
+        window.location.href = 'listaVeiculos.html';
+      } else {
+        const data = await response.json();
+        alert(data.mensagem || 'Erro ao cadastrar veículo');
+      }
+    });
+  </script>
+</body>
+</html>
+
