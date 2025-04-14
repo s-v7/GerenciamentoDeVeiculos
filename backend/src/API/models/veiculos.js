@@ -1,3 +1,4 @@
+feature/crud-veiculos
 
 const { DataTypes } = require('sequelize');
 const Conexao_Db = require('../configs/conexao_Db');
@@ -34,4 +35,3 @@ const Veiculo = Conexao_Db.define('Veiculo', {
 });
 
 module.exports = Veiculo;
-
