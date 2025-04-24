@@ -1,0 +1,71 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Lista de Veículos</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.6.1/css/bootstrap.min.css">
+</head>
+<body>
+  <div class="container mt-5">
+    <h1 class="mb-4 text-center">🚗 Lista de Veículos</h1>
+    <div class="text-right mb-3">
+      <button onclick="window.location.href='cadastrarVeiculo.html'" class="btn btn-success">Adicionar Novo Veículo</button>
+      <button onclick="logout()" class="btn btn-danger ml-2">Logout</button>
+    </div>
+    <table class="table table-bordered table-striped">
+      <thead class="thead-dark">
+        <tr>
+          <th>ID</th>
+          <th>Modelo</th>
+          <th>Marca</th>
+          <th>Ano</th>
+          <th>Tipo</th>
+          <th>Preço</th>
+        </tr>
+      </thead>
+      <tbody id="tabelaVeiculos">
+      </tbody>
+    </table>
+  </div>
+
+  <script>
+    const token = localStorage.getItem('token');
+
+    if (!token) {
+      alert('Você precisa estar logado!');
+      window.location.href = 'login.html';
+    }
+
+    fetch('http://localhost:3000/api/veiculos', {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    })
+    .then(response => response.json())
+    .then(veiculos => {
+      const tabela = document.getElementById('tabelaVeiculos');
+      veiculos.forEach(veiculo => {
+        tabela.innerHTML += `
+          <tr>
+            <td>${veiculo.id}</td>
+            <td>${veiculo.modelo}</td>
+            <td>${veiculo.marca}</td>
+            <td>${veiculo.ano}</td>
+            <td>${veiculo.tipo}</td>
+            <td>R$ ${parseFloat(veiculo.preco).toFixed(2)}</td>
+          </tr>
+        `;
+      });
+    })
+    .catch(error => console.error('Erro ao listar veículos:', error));
+
+    function logout() {
+      localStorage.removeItem('token');
+      window.location.href = 'login.html';
+    }
+  </script>
+</body>
+</html>
+

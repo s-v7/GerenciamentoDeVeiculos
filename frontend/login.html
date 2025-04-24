@@ -1,0 +1,47 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+	<head>
+		<meta charset="UTF-8">
+		<title>Login - Gerenciamento de Veículos</tilte>
+	</head>
+	<body>
+		<h2>Login</h2>
+		<form id="loginform">
+			<input type="email" id="email" placeholder="E-mail" required><br><br>
+			<input type="senha" id="senha" placeholder="Senha" required><br><br>
+
+			<button type="submit">Entrar</button>
+		</form>
+
+		<script>
+			const loginForm = document.getElementById('loginForm');
+
+			loginForm.addEventListener('submit', async (e) => {
+				e.preventDefault();
+				
+				const email = getElementById('email').value;
+				const senha = getElementById('senha').value;
+				
+				const response = await fetch('http://localhost:3000/api/login', {
+					
+					method: 'POST',
+					headers: {
+						'Content-Type': 'application/json'
+					},
+				});
+
+				const data = await response.json();
+
+				if (response.ok) {
+					localStorage.setItem('token', data.token);
+					alert('Login realizado com sucesso!');
+					window.location.href = 'listaVeiculosNovos.html'; 
+				} else {
+					alert(data.mensagem || 'Erro no Login');
+				}
+			});
+		</script>
+	</body>
+</html>
+							
