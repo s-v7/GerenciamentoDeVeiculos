@@ -5,7 +5,7 @@ const cors = require('cors')
 const appVeiculos = express();
 
 //Importando as Rotas
-const userRoutes = require('./userRoutes');
+//const userRoutes = require('./userRoutes');
 const authRoutes = require('./authRoutes');
 
 

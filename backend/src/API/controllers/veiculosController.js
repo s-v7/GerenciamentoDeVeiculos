@@ -1,4 +1,4 @@
-const veiculo = require("../models/veiculos.js").default;
+const veiculo = require("../models/veiculos.js");
 
 const veiculosController = {};
 
@@ -17,7 +17,7 @@ veiculosController.findAll = function (req, res) {
 };
 
 //Método para buscar um Elemento
-veiculosController.findOne = (req, res) => {
+veiculosController.find = (req, res) => {
   veiculo
     .findOne({
       raw: true,
@@ -26,7 +26,7 @@ veiculosController.findOne = (req, res) => {
       }
     })
     .then((data) => {
-      req.status(200).send(data);
+      res.status(200).send(data);
     })
     .catch((err) => {
       res.status(500).send("Erro ao buscar um Elemento!");
