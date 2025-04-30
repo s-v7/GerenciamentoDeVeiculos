@@ -1,7 +1,7 @@
 {
   "name": "backend",
   "version": "1.0.0",
-  "description": "",
+  "description": "Project para Fins de Aprendizado",
   "main": "index.js",
   "dependencies": {
     "accepts": "^2.0.0",
@@ -80,6 +80,7 @@
     "wrappy": "^1.0.2"
   },
   "scripts": {
+    "start": "node src/API/routes/server.js",	  
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],

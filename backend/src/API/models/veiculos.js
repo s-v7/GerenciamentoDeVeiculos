@@ -21,7 +21,7 @@ const Carros = db.define(
       allowNull: false
     },
     anoVeiculo: {
-      type: Sequelize.timestamps,
+      type: Sequelize.STRING(45),
       allowNull: false
     },
     placa: {

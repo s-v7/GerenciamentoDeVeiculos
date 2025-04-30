@@ -20,7 +20,7 @@ const Clientes = banco.define(
       allowNull: false
     },
     cidade: {
-      type: Sequelize.timestamps,
+      type: Sequelize.STRING(45),
       allowNull: false
     },
     estado: {
