@@ -17,7 +17,7 @@
     "cors": "^2.8.5",
     "debug": "^4.4.0",
     "depd": "^2.0.0",
-    "dotenv": "^16.5.0",
+    "dotenv": "^16.6.1",
     "dunder-proto": "^1.0.1",
     "ee-first": "^1.1.1",
     "encodeurl": "^2.0.0",
@@ -55,7 +55,7 @@
     "once": "^1.4.0",
     "parseurl": "^1.3.3",
     "path-to-regexp": "^8.2.0",
-    "pg": "^8.14.1",
+    "pg": "^8.16.3",
     "pg-hstore": "^2.3.4",
     "proxy-addr": "^2.0.7",
     "qs": "^6.14.0",
@@ -80,7 +80,7 @@
     "wrappy": "^1.0.2"
   },
   "scripts": {
-    "start": "node src/API/routes/server.js",	  
+    "start": "node src/API/routes/server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],

@@ -3,42 +3,42 @@ const Sequelize = require("sequelize");
 const banco = require("../configs/conexao_Db.js");
 
 const Clientes = banco.define(
-  "cliente",
+  "user_Clientes",
   {
     id_user: {
       type: Sequelize.INTEGER,
       allowNull: false,
       primaryKey: true,
-      autoIncrement: true
+      autoIncrement: true,
     },
     nome: {
       type: Sequelize.STRING(35),
-      allowNull: false
+      allowNull: false,
     },
     idade: {
       type: Sequelize.STRING(35),
-      allowNull: false
+      allowNull: false,
     },
     cidade: {
       type: Sequelize.STRING(45),
-      allowNull: false
+      allowNull: false,
     },
     estado: {
       type: Sequelize.INTEGER,
-      allowNull: false
+      allowNull: false,
     },
     profissao: {
       type: Sequelize.STRING(20),
-      allowNull: false
+      allowNull: false,
     },
     objeto: {
       type: Sequelize.STRING(35),
-      allowNull: true
-    }
+      allowNull: true,
+    },
   },
   {
     freezeTableName: true,
-    timestamps: false
+    timestamps: false,
   }
 );
 

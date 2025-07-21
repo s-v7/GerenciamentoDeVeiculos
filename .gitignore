@@ -1,18 +1,24 @@
-# Node.js
+# Node
 node_modules/
 .env
-yarn.lock
-package-lock.json
+dist/
+.vscode/
+*.log
+*.sqlite
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# React/Vite
+frontend/dist
+frontend/node_modules
+
+# Logs
+logs
+*.log
+*.gz
 
 # System files
 .DS_Store
-
-# Logs
-logs/
-*.log
-npm-debug.log*
-
-# IDEs
-.idea/
-.vscode/
+Thumbs.db
 
