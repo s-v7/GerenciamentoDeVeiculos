@@ -1,89 +1,83 @@
-const veiculo = require("../models/veiculos.js");
+const veiculo = require("../models/veiculos");
 
 const veiculosController = {};
 
-//Método buscar todos os Elementos
-veiculosController.findAll = function (req, res) {
-  veiculo
-    .findAll({
-      raw: true
-    })
-    .then(function (data) {
-      res.status(200).send(data);
-    })
-    .catch(function (err) {
-      res.status(500).send("Erro ao listar users: " + err);
-    });
+// Buscar todos
+veiculosController.findAll = async (req, res) => {
+  try {
+    const data = await veiculo.findAll({ raw: true });
+    res.status(200).json(data);
+  } catch (err) {
+    res.status(500).send("Erro ao listar veículos: " + err.message);
+  }
 };
 
-//Método para buscar um Elemento
-veiculosController.find = (req, res) => {
-  veiculo
-    .findOne({
+// Buscar por ID
+veiculosController.find = async (req, res) => {
+  try {
+    const data = await veiculo.findOne({
       raw: true,
-      where: {
-        id_veiculo: req.params.id
-      }
-    })
-    .then((data) => {
-      res.status(200).send(data);
-    })
-    .catch((err) => {
-      res.status(500).send("Erro ao buscar um Elemento!");
+      where: { id_veiculo: req.params.id },
     });
+
+    if (!data) return res.status(404).send("Veículo não encontrado");
+
+    res.status(200).json(data);
+  } catch (err) {
+    res.status(500).send("Erro ao buscar veículo: " + err.message);
+  }
 };
-//Método para criar um ELemento
-veiculosController.create = (req, res) => {
-  veiculo
-    .create({
+
+// Criar novo
+veiculosController.create = async (req, res) => {
+  try {
+    const novoVeiculo = await veiculo.create({
       modelo: req.body.modeloVeiculo,
       marca: req.body.fabricante,
       anoVeiculo: req.body.anoVeiculo,
       placa: req.body.placa,
-      corVeiculo: req.params.corVeiculo
-    })
-    .then((data) => {
-      res.sendStatus(200);
-    })
-    .catch((err) => {
-      res.status(500).send("Erro ao criar user: " + err);
+      corVeiculo: req.body.corVeiculo,
     });
+
+    res.status(201).json(novoVeiculo);
+  } catch (err) {
+    res.status(500).send("Erro ao criar veículo: " + err.message);
+  }
 };
 
-//Método para Atualizar um Elemento
-veiculosController.update = (req, res) => {
-  veiculo
-    .update(
+// Atualizar
+veiculosController.update = async (req, res) => {
+  try {
+    const result = await veiculo.update(
       {
         modelo: req.body.modeloVeiculo,
         marca: req.body.fabricante,
         anoVeiculo: req.body.anoVeiculo,
         placa: req.body.placa,
-        corVeiculo: req.params.corVeiculo
+        corVeiculo: req.body.corVeiculo,
       },
-      {
-        where: { id_veiculo: req.params.id }
-      }
-    )
-    .then((data) => {
-      res.sendStatus(200);
-    })
-    .catch((err) => {
-      res.status(500).send("Erro ao atualizar user: " + err);
-    });
+      { where: { id_veiculo: req.params.id } }
+    );
+
+    res.status(200).send("Veículo atualizado com sucesso");
+  } catch (err) {
+    res.status(500).send("Erro ao atualizar veículo: " + err.message);
+  }
 };
 
-//Método para Excluir um Elemento
-veiculosController.delete = (req, res) => {
-  veiculo
-    .destroy({
-      where: { id_veiculo: req.params.id }
-    })
-    .then((data) => {
-      res.sendStatus(200);
-    })
-    .catch((err) => {
-      res.status(500).send("Erro ao apagar user: " + err);
+// Deletar
+veiculosController.delete = async (req, res) => {
+  try {
+    const deleted = await veiculo.destroy({
+      where: { id_veiculo: req.params.id },
     });
+
+    if (!deleted) return res.status(404).send("Veículo não encontrado");
+
+    res.status(200).send("Veículo removido com sucesso");
+  } catch (err) {
+    res.status(500).send("Erro ao apagar veículo: " + err.message);
+  }
 };
+
 module.exports = veiculosController;
