@@ -9,30 +9,42 @@ import joblib
 import pandas as pd
 import numpy as np
 
-from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
 
 from ai.features.build_features import CarFeaturePipeline
 
 def train_model():
-    dataset_path = BASE_DIR / "ai" / "datasets" / "cars_dataset.csv"
+    processed_dir = BASE_DIR / "ai" / "datasets" / "processed"
+    train_path = processed_dir / "train.csv"
+    test_path = processed_dir / "test.csv"
+
     models_dir = BASE_DIR / "ai" / "models"
     models_dir.mkdir(parents=True, exist_ok=True)
 
-    if not dataset_path.exists():
-        raise FileNotFoundError(f"Dataset não encontrado em {dataset_path}. Execute generate_synthetic_data.py.")
+    if not train_path.exists() or not test_path.exists():
+        raise FileNotFoundError(
+            f"Dataset processado não encontrado in {processed_dir}. "
+            "Execute: python3 ai/data/prepare_dataset.py"
+        )
 
-    print("Carregando dataset ...")
-    df = pd.read_csv(dataset_path)
+    print("Carregando dataset Processedados ...")
+    train_df = pd.read_csv(train_path)
+    test_df  = pd.read_csv(test_path)
 
-    U = df.drop(columns=['price'])
-    v = df['price']
+    X_train_raw = train_df.drop(columns=["price"])
+    y_train = train_df["price"]
+    
+    X_test_raw = test_df.drop(columns=["price"])
+    y_test = test_df["price"]
 
-    X_train_raw, X_test_raw, y_train, y_test = train_test_split(U, v, test_size=0.2, random_state=42)
+    print(f"TRAIN: {len(X_train_raw)}")
+    print(f"TEST: {len(X_test_raw)}")
 
-    print("Processando features...")
+    print("Processando Features...")
+
     pipeline = CarFeaturePipeline()
+
     X_train, feature_names = pipeline.fit_transform(pd.concat([X_train_raw, y_train], axis=1))
     X_test = pipeline.transform(X_test_raw)
 
@@ -41,6 +53,7 @@ def train_model():
     model.fit(X_train, y_train)
 
     y_prod = model.predict(X_test)
+
     mae = mean_absolute_error(y_test, y_prod)
     rmse = np.sqrt(mean_squared_error(y_test, y_prod))
     r2 = r2_score(y_test, y_prod)
