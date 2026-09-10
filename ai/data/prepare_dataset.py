@@ -10,6 +10,7 @@ DATASET_PATH = BASE_DIR / "ai" / "datasets" / "cars_dataset.csv"
 OUTPUT_DIR = BASE_DIR / "ai" / "datasets" / "processed"
 
 FEATURES = [
+    "make",
     "year",
     "engine_cc",
     "mileage_km",

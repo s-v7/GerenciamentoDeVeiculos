@@ -4,6 +4,7 @@
   "train_rows": 1200,
   "test_rows": 300,
   "features": [
+    "make",
     "year",
     "engine_cc",
     "mileage_km",

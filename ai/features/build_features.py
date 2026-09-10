@@ -11,8 +11,8 @@ import numpy as np
 from sklearn.preprocessing import StandardScaler, OneHotEncoder
 from sklearn.compose import ColumnTransformer
 
-NUMERICAL_FEATURES = ['year', 'engine_cc', 'mileage_km', 'doors']
-CATEGORICAL_FEATURES = ['fuel_type', 'transmission', 'body_type', 'state']
+NUMERICAL_FEATURES = ['year', 'engine_cc', 'mileage_km', 'doors', 'vehicle_age', 'km_per_year']
+CATEGORICAL_FEATURES = ['make', 'fuel_type', 'transmission', 'body_type', 'state']
 
 class CarFeaturePipeline:
     """Pipeline de engenharia de recursos para o modelo de precificacao de veiculos."""
@@ -29,6 +29,9 @@ class CarFeaturePipeline:
 
     def fit_transform(self, df: pd.DataFrame):
         """Ajusta os transformadores e converte os dados em uma matriz pronta para ML."""
+        df = df.copy()
+        df['vehicle_age'] = 2025 - df['year']
+        df['km_per_year'] = df['mileage_km'] / df['vehicle_age'].clip(lower=1)
         X = df.drop(columns=['price'], errors='ignore')
         X_trans = self.preprocessor.fit_transform(X)
         self.is_fitted = True
@@ -44,6 +47,9 @@ class CarFeaturePipeline:
         """Aplica as transformacoes em dados novos sem recalcular medias/desvios."""
         if not self.is_fitted:
             raise RuntimeError("O pipeline de features precisa ser ajustado com fit_transform primeiro.")
+        df = df.copy()
+        df['vehicle_age'] = 2025 - df['year']
+        df['km_per_year'] = df['mileage_km'] / df['vehicle_age'].clip(lower=1)
         X = df.drop(columns=['price'], errors='ignore')
         return self.preprocessor.transform(X)
 
