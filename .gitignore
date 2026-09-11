@@ -27,3 +27,5 @@ Thumbs.db
 __pycache__/
 *.py[cod]
 *.pyo
+
+file_test.py
