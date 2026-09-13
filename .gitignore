@@ -29,3 +29,6 @@ __pycache__/
 *.pyo
 
 file_test.py
+
+# TensorFlow / Keras
+# Modelos .keras podem ser versionados quando pequenos
