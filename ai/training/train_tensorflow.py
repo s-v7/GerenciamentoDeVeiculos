@@ -1,4 +1,5 @@
 import sys
+import joblib
 from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
@@ -45,9 +46,7 @@ def train_tensorflow_model():
     print(f"TEST : {len(X_test_raw)}")
 
     print("Processando features...")
-
     pipeline = CarFeaturePipeline()
-
     X_train, feature_names = pipeline.fit_transform(
         pd.concat(
             [
@@ -59,11 +58,8 @@ def train_tensorflow_model():
     )
 
     X_test = pipeline.transform(X_test_raw)
-
     print(f"Features de entrada: {X_train.shape[1]}")
-
     print("Construindo rede neural...")
-
     model = tf.keras.Sequential(
         [
             tf.keras.layers.Input(shape=(X_train.shape[1],)),
@@ -80,7 +76,6 @@ def train_tensorflow_model():
     )
 
     model.summary()
-
     early_stopping = tf.keras.callbacks.EarlyStopping(
         monitor="val_loss",
         patience=15,
@@ -88,7 +83,6 @@ def train_tensorflow_model():
     )
 
     print("\nTreinando TensorFlow...")
-
     history = model.fit(
         X_train,
         y_train,
@@ -100,9 +94,7 @@ def train_tensorflow_model():
     )
 
     print("\nRealizando previsões...")
-
     y_pred = model.predict(X_test, verbose=0).flatten()
-
     mae = mean_absolute_error(y_test, y_pred)
     rmse = np.sqrt(mean_squared_error(y_test, y_pred))
     r2 = r2_score(y_test, y_pred)
@@ -113,8 +105,13 @@ def train_tensorflow_model():
     print(f"R²   : {r2:.4f}")
 
     model_path = models_dir / "car_price_tensorflow.keras"
-
     model.save(model_path)
+
+    pipeline_path = models_dir / "feature_pipeline.pkl"
+
+    joblib.dump(pipeline, pipeline_path)
+
+    print(f"Pipeline salvo em: {pipeline_path}")
 
     print(f"\nModelo salvo em: {model_path}")
     print(f"Épocas executadas: {len(history.history['loss'])}")
