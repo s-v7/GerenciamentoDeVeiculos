@@ -1,83 +1,38 @@
-const veiculo = require("../models/veiculos");
+const Veiculo = require("../models/Veiculo");
+const asyncHandler = require("../utils/asyncHandler");
+const NotFoundError = require("../errors/NotFoundError");
 
 const veiculosController = {};
 
-// Buscar todos
-veiculosController.findAll = async (req, res) => {
-  try {
-    const data = await veiculo.findAll({ raw: true });
-    res.status(200).json(data);
-  } catch (err) {
-    res.status(500).send("Erro ao listar veículos: " + err.message);
-  }
-};
+veiculosController.findAll = asyncHandler(async (req, res) => {
+  const dt = await Veiculo.findAll({ raw: true });
+  return res.status(200).json(dt);
+});
 
-// Buscar por ID
-veiculosController.find = async (req, res) => {
-  try {
-    const data = await veiculo.findOne({
-      raw: true,
-      where: { id_veiculo: req.params.id },
-    });
+veiculosController.find = asyncHandler(async (req, res) => {
+  const dt = await Veiculo.findOne({ where: { id_veiculo: req.params.id } });
+  if (!dt) throw new NotFoundError("Veículo não encontrado.");
+  
+  return res.status(200).json(dt);
+});
 
-    if (!data) return res.status(404).send("Veículo não encontrado");
+veiculosController.create = asyncHandler(async (req, res) => {
+  const newVeiculo = await Veiculo.create(req.body);
+  return res.status(201).json(newVeiculo);
+});
 
-    res.status(200).json(data);
-  } catch (err) {
-    res.status(500).send("Erro ao buscar veículo: " + err.message);
-  }
-};
+veiculosController.update = asyncHandler(async (req, res) => {
+  const [affectedRows] = await Veiculo.update(req.body, { where: { id_veiculo: req.params.id } });
+  if (affectedRows === 0) throw new NotFoundError("Veículo não encontrado para atualização.");
 
-// Criar novo
-veiculosController.create = async (req, res) => {
-  try {
-    const novoVeiculo = await veiculo.create({
-      modelo: req.body.modeloVeiculo,
-      marca: req.body.fabricante,
-      anoVeiculo: req.body.anoVeiculo,
-      placa: req.body.placa,
-      corVeiculo: req.body.corVeiculo,
-    });
+  return res.status(200).json({ message: "Veículo atualizado com sucesso." });
+});
 
-    res.status(201).json(novoVeiculo);
-  } catch (err) {
-    res.status(500).send("Erro ao criar veículo: " + err.message);
-  }
-};
+veiculosController.delete = asyncHandler(async (req, res) => {
+  const deleted = await Veiculo.destroy({ where: { id_veiculo: req.params.id } });
+  if (deleted === 0) throw new NotFoundError("Veículo não encontrado para remoção.");
 
-// Atualizar
-veiculosController.update = async (req, res) => {
-  try {
-    const result = await veiculo.update(
-      {
-        modelo: req.body.modeloVeiculo,
-        marca: req.body.fabricante,
-        anoVeiculo: req.body.anoVeiculo,
-        placa: req.body.placa,
-        corVeiculo: req.body.corVeiculo,
-      },
-      { where: { id_veiculo: req.params.id } }
-    );
-
-    res.status(200).send("Veículo atualizado com sucesso");
-  } catch (err) {
-    res.status(500).send("Erro ao atualizar veículo: " + err.message);
-  }
-};
-
-// Deletar
-veiculosController.delete = async (req, res) => {
-  try {
-    const deleted = await veiculo.destroy({
-      where: { id_veiculo: req.params.id },
-    });
-
-    if (!deleted) return res.status(404).send("Veículo não encontrado");
-
-    res.status(200).send("Veículo removido com sucesso");
-  } catch (err) {
-    res.status(500).send("Erro ao apagar veículo: " + err.message);
-  }
-};
+  return res.status(200).json({ message: "Veículo removido com sucesso." });
+});
 
 module.exports = veiculosController;

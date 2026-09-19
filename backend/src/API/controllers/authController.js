@@ -1,41 +1,37 @@
-const User = require("../models/user_Clientes");
+const UserLogin = require("../models/UserLogin");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-require("dotenv").config();
+const asyncHandler = require("../utils/asyncHandler");
+const NotFoundError = require("../errors/NotFoundError");
+const UnauthorizedError = require("../errors/UnauthorizedError");
 
-exports.login = async (req, res) => {
+exports.login = asyncHandler(async (req, res) => {
   const { email, senha } = req.body;
 
-  try {
-    const user = await User.findOne({ where: { email } });
-
-    if (!user) {
-      return res.status(404).json({ erro: "Usuário não encontrado" });
-    }
-
-    const senhaValida = await bcrypt.compare(senha, user.senha);
-
-    if (!senhaValida) {
-      return res.status(401).json({ erro: "Senha inválida" });
-    }
-
-    const token = jwt.sign(
-      { id: user.idCliente, email: user.email },
-      process.env.JWT_SECRET,
-      { expiresIn: "1d" }
-    );
-
-    return res.status(200).json({
-      mensagem: "Login realizado com sucesso",
-      token,
-      usuario: {
-        id: user.idCliente,
-        nome: user.nome,
-        email: user.email,
-      },
-    });
-  } catch (err) {
-    console.error(err);
-    return res.status(500).json({ erro: "Erro interno no servidor" });
+  const user = await UserLogin.findOne({ where: { email } });
+  if (!user) {
+    throw new NotFoundError("Usuário não encontrado.");
   }
-};
+
+  const senhaValida = await bcrypt.compare(senha, user.senha);
+  if (!senhaValida) {
+    throw new UnauthorizedError("Credenciais inválidas.");
+  }
+
+  const secret = process.env.JWT_SECRET || "chave_secreta_sv7";
+  const token = jwt.sign(
+    { id: user.id, email: user.email },
+    secret,
+    { expiresIn: "1d" }
+  );
+
+  return res.status(200).json({
+    message: "Login realizado com sucesso",
+    token,
+    user: {
+      id: user.id,
+      nome: user.nome,
+      email: user.email,
+    },
+  });
+});
