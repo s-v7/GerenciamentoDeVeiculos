@@ -1,12 +1,23 @@
 const express = require("express");
-const veiculosController = require("../controllers/veiculosController");
+const authMiddleware = require("../middlewares/authMiddleware");
+const asyncHandler = require("../utils/asyncHandler");
+const UserLogin = require("../models/UserLogin");
+const NotFoundError = require("../errors/NotFoundError");
 
-const routes = express.Router();
+const r = express.Router();
 
-routes.get("/cars", veiculosController.findAll);
-routes.post("/cars", veiculosController.create);
-routes.get("/cars/:id", veiculosController.find);
-routes.put("/cars/:id", veiculosController.update);
-routes.delete("/cars/:id", veiculosController.delete);
+r.use(authMiddleware);
 
-module.exports = routes;
+r.get("/me", asyncHandler(async (req, res) => {
+  const user = await UserLogin.findByPk(req.user.id, {
+    attributes: ["id", "nome", "email", "createdAt"]
+  });
+  
+  if (!user) {
+    throw new NotFoundError("Usuário não encontrado.");
+  }
+
+  return res.status(200).json(user);
+}));
+
+module.exports = r;
