@@ -27,6 +27,7 @@
     "escape-html": "^1.0.3",
     "etag": "^1.8.1",
     "express": "^5.1.0",
+    "express-rate-limit": "^8.7.0",
     "finalhandler": "^2.1.0",
     "forwarded": "^0.2.0",
     "fresh": "^2.0.0",
@@ -36,6 +37,7 @@
     "gopd": "^1.2.0",
     "has-symbols": "^1.1.0",
     "hasown": "^2.0.2",
+    "helmet": "^8.3.0",
     "http-errors": "^2.0.0",
     "iconv-lite": "^0.6.3",
     "inherits": "^2.0.4",
@@ -57,6 +59,8 @@
     "path-to-regexp": "^8.2.0",
     "pg": "^8.16.3",
     "pg-hstore": "^2.3.4",
+    "pino": "^10.3.1",
+    "pino-http": "^11.0.0",
     "proxy-addr": "^2.0.7",
     "qs": "^6.14.0",
     "range-parser": "^1.2.1",
@@ -73,18 +77,24 @@
     "side-channel-map": "^1.0.1",
     "side-channel-weakmap": "^1.0.2",
     "statuses": "^2.0.1",
+    "swagger-jsdoc": "^6.3.0",
+    "swagger-ui-express": "^5.0.1",
     "toidentifier": "^1.0.1",
     "type-is": "^2.0.1",
     "unpipe": "^1.0.0",
     "vary": "^1.1.2",
-    "wrappy": "^1.0.2"
+    "wrappy": "^1.0.2",
+    "zod": "^4.6.5"
   },
   "scripts": {
-    "start": "node src/API/routes/server.js",
+    "start": "node src/server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "type": "commonjs"
+  "type": "commonjs",
+  "devDependencies": {
+    "pino-pretty": "^13.1.3"
+  }
 }

@@ -1,52 +1,44 @@
 const Sequelize = require("sequelize");
-const db = require("../configs/conexao_Db.js");
+const dbConn = require("../configs/conexaoDb");
 
-const Carros = db.define(
-  "veiculo",
+const UserCliente = dbConn.define(
+  "user_Clientes",
   {
-    id_veiculo: {
+    id_user: {
       type: Sequelize.INTEGER,
       allowNull: false,
       primaryKey: true,
       autoIncrement: true,
     },
-    modelo: {
+    nome: {
       type: Sequelize.STRING(35),
       allowNull: false,
     },
-    marca: {
+    idade: {
       type: Sequelize.STRING(35),
       allowNull: false,
     },
-    anoVeiculo: {
+    cidade: {
       type: Sequelize.STRING(45),
       allowNull: false,
     },
-    placa: {
-      type: Sequelize.STRING(10),
-      allowNull: false,
-    },
-    tipoCombustivel: {
-      type: Sequelize.STRING(20),
-      allowNull: true,
-    },
-    corVeiculo: {
-      type: Sequelize.STRING(35),
-      allowNull: true,
-    },
-    id_Cliente: {
+    estado: {
       type: Sequelize.INTEGER,
       allowNull: false,
-      references: {
-        model: "user_Clientes",
-        key: "idCliente",
-      },
+    },
+    profissao: {
+      type: Sequelize.STRING(20),
+      allowNull: false,
+    },
+    objeto: {
+      type: Sequelize.STRING(35),
+      allowNull: true,
     },
   },
   {
     freezeTableName: true,
     timestamps: false,
-  }
+  },
 );
 
-module.exports = Carros;
+module.exports = UserCliente;
