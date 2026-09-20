@@ -1,6 +1,5 @@
-import { readFile } from "node:fs/promises";
 import * as z from "zod/v4";
-const DATA_FILE = "../../ai/data/processed/senatran/senatran_uf_2026-07.csv";
+import { findByState } from "../data/senatranRepository.js";
 const UF_TO_STATE = {
     AC: "ACRE",
     AL: "ALAGOAS",
@@ -30,6 +29,13 @@ const UF_TO_STATE = {
     SE: "SERGIPE",
     TO: "TOCANTINS"
 };
+function resolveState(uf) {
+    const state = UF_TO_STATE[uf.toUpperCase()];
+    if (!state) {
+        throw new Error(`UF inválida: ${uf}`);
+    }
+    return state;
+}
 export const getFleetByStateSchema = z.object({
     uf: z
         .string()
@@ -37,28 +43,77 @@ export const getFleetByStateSchema = z.object({
         .transform((value) => value.toUpperCase())
         .describe("Sigla da unidade federativa, por exemplo PI ou SP")
 });
+export const compareStatesSchema = z.object({
+    uf_a: z
+        .string()
+        .length(2)
+        .transform((value) => value.toUpperCase())
+        .describe("Primeira UF da comparação"),
+    uf_b: z
+        .string()
+        .length(2)
+        .transform((value) => value.toUpperCase())
+        .describe("Segunda UF da comparação")
+});
 export async function getFleetByState(uf) {
-    const state = UF_TO_STATE[uf];
-    if (!state) {
-        throw new Error(`UF inválida: ${uf}`);
-    }
-    const csv = await readFile(DATA_FILE, "utf-8");
-    const lines = csv.trim().split("\n");
-    const header = lines[0]?.split(",");
-    if (!header) {
-        throw new Error("Cabeçalho do dataset não encontrado");
-    }
-    const row = lines
-        .slice(1)
-        .map((line) => line.split(","))
-        .find((columns) => columns[0] === state);
-    if (!row) {
+    const state = resolveState(uf);
+    const data = await findByState(state);
+    if (!data) {
         throw new Error(`Estado não encontrado no dataset: ${state}`);
     }
-    const data = {};
-    header.forEach((column, index) => {
-        data[column] = row[index] ?? "";
-    });
     return data;
+}
+export async function compareStates(ufA, ufB) {
+    const stateA = resolveState(ufA);
+    const stateB = resolveState(ufB);
+    const dataA = await findByState(stateA);
+    const dataB = await findByState(stateB);
+    if (!dataA) {
+        throw new Error(`Estado não encontrado no dataset: ${stateA}`);
+    }
+    if (!dataB) {
+        throw new Error(`Estado não encontrado no dataset: ${stateB}`);
+    }
+    return {
+        state_a: dataA.state,
+        state_b: dataB.state,
+        total_fleet: {
+            a: dataA.total_fleet,
+            b: dataB.total_fleet,
+            difference: dataB.total_fleet - dataA.total_fleet
+        },
+        categories: {
+            CARRO: {
+                a: dataA.CARRO,
+                b: dataB.CARRO,
+                difference: dataB.CARRO - dataA.CARRO
+            },
+            MOTO: {
+                a: dataA.MOTO,
+                b: dataB.MOTO,
+                difference: dataB.MOTO - dataA.MOTO
+            },
+            PESADO: {
+                a: dataA.PESADO,
+                b: dataB.PESADO,
+                difference: dataB.PESADO - dataA.PESADO
+            },
+            IMPLEMENTO: {
+                a: dataA.IMPLEMENTO,
+                b: dataB.IMPLEMENTO,
+                difference: dataB.IMPLEMENTO - dataA.IMPLEMENTO
+            },
+            NAO_CLASSIFICADO: {
+                a: dataA.NAO_CLASSIFICADO,
+                b: dataB.NAO_CLASSIFICADO,
+                difference: dataB.NAO_CLASSIFICADO - dataA.NAO_CLASSIFICADO
+            },
+            OUTRO: {
+                a: dataA.OUTRO,
+                b: dataB.OUTRO,
+                difference: dataB.OUTRO - dataA.OUTRO
+            }
+        }
+    };
 }
 //# sourceMappingURL=senatran.js.map
