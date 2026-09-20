@@ -1,16 +1,48 @@
 import { McpServer } from "@modelcontextprotocol/server";
 import { serveStdio } from "@modelcontextprotocol/server/stdio";
 import { senatranUfResource, readSenatranUf } from "./resources/senatran.js";
+import * as z from "zod/v4";
+import { getFleetByState, getFleetByStateSchema } from "./tools/senatran.js";
 function createServer() {
     const server = new McpServer({
         name: "vehicle-mcp-server",
-        version: "1.0.0"
+        version: "1.0.0",
     });
     server.registerResource("senatran-uf", senatranUfResource, {
         title: "SENATRAN — Frota por UF",
         description: "Dados da frota de veículos da SENATRAN por unidade federativa.",
-        mimeType: "application/json"
+        mimeType: "application/json",
     }, readSenatranUf);
+    server.registerTool("get_fleet_by_state", {
+        title: "Frota por UF",
+        description: "Consulta a frota de veículos da SENATRAN por unidade federativa.",
+        inputSchema: getFleetByStateSchema,
+    }, async ({ uf }) => {
+        try {
+            const data = await getFleetByState(uf);
+            return {
+                content: [
+                    {
+                        type: "text",
+                        text: JSON.stringify(data),
+                    },
+                ],
+            };
+        }
+        catch (error) {
+            return {
+                content: [
+                    {
+                        type: "text",
+                        text: error instanceof Error
+                            ? error.message
+                            : "Erro ao consultar a frota.",
+                    },
+                ],
+                isError: true,
+            };
+        }
+    });
     return server;
 }
 serveStdio(createServer);
