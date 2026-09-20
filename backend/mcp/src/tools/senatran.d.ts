@@ -2,6 +2,9 @@ import * as z from "zod/v4";
 export declare const getFleetByStateSchema: z.ZodObject<{
     uf: z.ZodPipe<z.ZodString, z.ZodTransform<string, string>>;
 }, z.core.$strip>;
+export declare const getVehicleDistributionSchema: z.ZodObject<{
+    uf: z.ZodPipe<z.ZodString, z.ZodTransform<string, string>>;
+}, z.core.$strip>;
 export declare const compareStatesSchema: z.ZodObject<{
     uf_a: z.ZodPipe<z.ZodString, z.ZodTransform<string, string>>;
     uf_b: z.ZodPipe<z.ZodString, z.ZodTransform<string, string>>;
@@ -46,6 +49,18 @@ export declare function compareStates(ufA: string, ufB: string): Promise<{
             b: number;
             difference: number;
         };
+    };
+}>;
+export declare function getVehicleDistribution(uf: string): Promise<{
+    state: string;
+    total_fleet: number;
+    distribution: {
+        CARRO: number;
+        MOTO: number;
+        PESADO: number;
+        IMPLEMENTO: number;
+        NAO_CLASSIFICADO: number;
+        OUTRO: number;
     };
 }>;
 //# sourceMappingURL=senatran.d.ts.map

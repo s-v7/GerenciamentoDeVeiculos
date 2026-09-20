@@ -1,8 +1,6 @@
 import * as z from "zod/v4";
 
-import {
-  findByState
-} from "../data/senatranRepository.js";
+import { findByState } from "../data/senatranRepository.js";
 
 const UF_TO_STATE: Record<string, string> = {
   AC: "ACRE",
@@ -31,7 +29,7 @@ const UF_TO_STATE: Record<string, string> = {
   SC: "SANTA CATARINA",
   SP: "SAO PAULO",
   SE: "SERGIPE",
-  TO: "TOCANTINS"
+  TO: "TOCANTINS",
 };
 
 function resolveState(uf: string): string {
@@ -49,7 +47,15 @@ export const getFleetByStateSchema = z.object({
     .string()
     .length(2)
     .transform((value) => value.toUpperCase())
-    .describe("Sigla da unidade federativa, por exemplo PI ou SP")
+    .describe("Sigla da unidade federativa, por exemplo PI ou SP"),
+});
+
+export const getVehicleDistributionSchema = z.object({
+  uf: z
+    .string()
+    .length(2)
+    .transform((value) => value.toUpperCase())
+    .describe("Sigla da unidade federativa, por ex: PI ou SP"),
 });
 
 export const compareStatesSchema = z.object({
@@ -63,7 +69,7 @@ export const compareStatesSchema = z.object({
     .string()
     .length(2)
     .transform((value) => value.toUpperCase())
-    .describe("Segunda UF da comparação")
+    .describe("Segunda UF da comparação"),
 });
 
 export async function getFleetByState(uf: string) {
@@ -78,10 +84,7 @@ export async function getFleetByState(uf: string) {
   return data;
 }
 
-export async function compareStates(
-  ufA: string,
-  ufB: string
-) {
+export async function compareStates(ufA: string, ufB: string) {
   const stateA = resolveState(ufA);
   const stateB = resolveState(ufB);
 
@@ -103,46 +106,76 @@ export async function compareStates(
     total_fleet: {
       a: dataA.total_fleet,
       b: dataB.total_fleet,
-      difference: dataB.total_fleet - dataA.total_fleet
+      difference: dataB.total_fleet - dataA.total_fleet,
     },
 
     categories: {
       CARRO: {
         a: dataA.CARRO,
         b: dataB.CARRO,
-        difference: dataB.CARRO - dataA.CARRO
+        difference: dataB.CARRO - dataA.CARRO,
       },
 
       MOTO: {
         a: dataA.MOTO,
         b: dataB.MOTO,
-        difference: dataB.MOTO - dataA.MOTO
+        difference: dataB.MOTO - dataA.MOTO,
       },
 
       PESADO: {
         a: dataA.PESADO,
         b: dataB.PESADO,
-        difference: dataB.PESADO - dataA.PESADO
+        difference: dataB.PESADO - dataA.PESADO,
       },
 
       IMPLEMENTO: {
         a: dataA.IMPLEMENTO,
         b: dataB.IMPLEMENTO,
-        difference: dataB.IMPLEMENTO - dataA.IMPLEMENTO
+        difference: dataB.IMPLEMENTO - dataA.IMPLEMENTO,
       },
 
       NAO_CLASSIFICADO: {
         a: dataA.NAO_CLASSIFICADO,
         b: dataB.NAO_CLASSIFICADO,
-        difference:
-          dataB.NAO_CLASSIFICADO - dataA.NAO_CLASSIFICADO
+        difference: dataB.NAO_CLASSIFICADO - dataA.NAO_CLASSIFICADO,
       },
 
       OUTRO: {
         a: dataA.OUTRO,
         b: dataB.OUTRO,
-        difference: dataB.OUTRO - dataA.OUTRO
-      }
-    }
+        difference: dataB.OUTRO - dataA.OUTRO,
+      },
+    },
+  };
+}
+
+export async function getVehicleDistribution(uf: string) {
+  const state = resolveState(uf);
+
+  const data = await findByState(state);
+
+  if (!data) {
+    throw new Error(`Estado não encontrado no dataset: ${state}`);
+  }
+
+  const total = data.total_fleet;
+
+  if (total <= 0) {
+    throw new Error(`Frota inválida para o estado: ${state}`);
+  }
+
+  return {
+    state: data.state,
+    total_fleet: total,
+    distribution: {
+      CARRO: Number(((data.CARRO / total) * 100).toFixed(2)),
+      MOTO: Number(((data.MOTO / total) * 100).toFixed(2)),
+      PESADO: Number(((data.PESADO / total) * 100).toFixed(2)),
+      IMPLEMENTO: Number(((data.IMPLEMENTO / total) * 100).toFixed(2)),
+      NAO_CLASSIFICADO: Number(
+        ((data.NAO_CLASSIFICADO / total) * 100).toFixed(2),
+      ),
+      OUTRO: Number(((data.OUTRO / total) * 100).toFixed(2)),
+    },
   };
 }
