@@ -1,93 +1,198 @@
-## Inteligência Artificial
+# Vehicle Intelligence Platform
 
-A camada de IA oferece análise de dados e previsão de preços de veículos por meio de um pipeline de Machine Learning e de uma API FastAPI.
+Plataforma experimental para gerenciamento, análise e inteligência aplicada a dados de veículos.
 
-### Visão geral
+O projeto evoluiu de um sistema CRUD tradicional para uma arquitetura que integra:
+
+- Backend Node.js / Express
+- React
+- PostgreSQL
+- Data Engineering
+- Dados da SENATRAN
+- Machine Learning com TensorFlow
+- ML API com FastAPI
+- Model Evaluation
+- Model Comparison
+- MCP Server
+- Integração MCP → ML
+
+O objetivo é explorar uma arquitetura na qual dados, análises e modelos de Machine Learning possam futuramente ser expostos como capacidades para sistemas baseados em LLM e Agents.
+
+---
+
+## Arquitetura
 
 ```text
-Dataset → Preparação → Feature Engineering → Modelos ML → Avaliação
-                                                     ↓
-                                           ML API (FastAPI)
-                                                     ↓
-                                            Node.js / Express
-```
+                         ┌─────────────────────┐
+                         │       React         │
+                         │     Frontend        │
+                         └──────────┬──────────┘
+                                    │
+                                    ▼
+                         ┌─────────────────────┐
+                         │   Node.js / Express │
+                         │       Backend       │
+                         └──────────┬──────────┘
+                                    │
+                    ┌───────────────┼────────────────┐
+                    │               │                │
+                    ▼               ▼                ▼
+             ┌────────────┐  ┌────────────┐  ┌────────────┐
+             │ PostgreSQL │  │   ML API   │  │ MCP Server │
+             │            │  │  FastAPI   │  │ TypeScript │
+             └────────────┘  └─────┬──────┘  └─────┬──────┘
+                                   │               │
+                                   ▼               │
+                              ┌──────────┐         │
+                              │TensorFlow│         │
+                              └──────────┘         │
+                                                   │
+                                   ┌───────────────┘
+                                   │
+                                   ▼
+                            Future Agent / LLM
+
+## Backend
+
+Backend desenvolvido com:
+
+- Node.js
+- Express
+- Sequelize
+- PostgreSQL
+- JWT
+- Zod
+- Helmet
+- Rate Limiting
+- Swagger
+
+O backend fornece a API principal da aplicação e integra o serviço de Machine Learning.
 
 ## Machine Learning
 
-### Dados e features
+O projeto possui uma pipeline de Machine Learning para estimativa de preço de veículos.
 
-O dataset sintético inicial possui 1.500 registros, com atributos de marca, ano, cilindrada, quilometragem, portas, combustível, câmbio, carroceria, estado e preço.
+### Pipeline
+```text
+Raw Data
+   ↓
+Preprocessing
+   ↓
+Feature Engineering
+   ↓
+Training
+   ↓
+Model Evaluation
+   ↓
+TensorFlow Model
+   ↓
+FastAPI
+```
+### Features utilizadas
+- `year`
+- `engine_cc`
+- `mileage_km`
+- `doors`
+- `vehicle_age`
+- `km_per_year`
 
-O pipeline também calcula:
+- `make`
+- `fuel_type`
+- `transmission`
+- `body_type`
+- `state`
 
-- `vehicle_age`: idade do veículo;
-- `km_per_year`: quilometragem média anual.
+### TensorFlow Model
 
-Variáveis numéricas são normalizadas e variáveis categóricas são convertidas com One-Hot Encoding.
+Modelo de regressão desenvolvido com TensorFlow/Keras.
 
-### Modelos e resultados
-
-Foram avaliados Random Forest e uma rede neural com TensorFlow/Keras:
-
-| Modelo | MAE | RMSE | R² |
-| --- | ---: | ---: | ---: |
-| Random Forest | R$ 4.629,40 | R$ 5.875,47 | 0,9706 |
-| TensorFlow | R$ 3.957,03 | R$ 4.993,59 | 0,9787 |
-
-> Os resultados foram obtidos em um dataset sintético e não representam diretamente preços reais de mercado.
-
-### Interpretabilidade
-
-As análises incluem:
-
-- Permutation Importance;
-- análise de erros e de erros por faixa de preço;
-- comparação entre valores previstos e observados;
-- avaliação do comportamento do modelo.
-
-## Dados da SENATRAN
-
-O projeto possui ingestão e análise dos dados públicos da SENATRAN:
+Arquitetura principal:
 
 ```text
-SENATRAN → Ingestion → Parsing → Validação → Classificação
-                                           ↓
-                    Agregação por UF / município → Features → Analytics / ML
+Input
+  ↓
+Dense(64, ReLU)
+  ↓
+Dense(32, ReLU)
+  ↓
+Dense(1)
 ```
 
-A classificação utiliza categorias oficiais, como `CARRO`, `MOTO`, `PESADO`, `IMPLEMENTO`, `OUTRO` e `NAO_CLASSIFICADO`.
+Treinamento com:
 
-Os dados brutos, devido ao tamanho, permanecem fora do versionamento do Git.
+- Adam
+- Learning rate: `0.001`
+- MSE loss
+- MAE metric
+- Early Stopping
+- Validation split
 
-### Integração com o ML
+## Model Evaluation
 
-Foi avaliado se características agregadas da frota estadual poderiam melhorar a previsão individual. Como o dataset de treinamento não possui município, o experimento utiliza apenas contexto estadual.
+O projeto possui scripts para avaliação e análise do comportamento dos modelos:
 
-No dataset sintético, a inclusão dos dados da SENATRAN não produziu melhoria relevante. O experimento foi mantido para validar a arquitetura de dados.
+ai/evaluation/
+├── evaluate.py
+├── error_analysis.py
+├── feature_importance.py
+├── model_behavior.py
+├── model_comparison.py
+├── model_comparison_analysis.py
+├── senatran_ablation.py
+├── senatran_distribution.py
+├── senatran_experiment.py
+└── senatran_quality.py
+
+Também são mantidos artefatos de análise dos experimentos.
+
+## SENATRAN Data Engineering
+
+O projeto utiliza dados públicos da SENATRAN para análise da frota brasileira.
+
+### Pipeline
+
+SENATRAN
+   ↓
+Ingestion
+   ↓
+Cleaning
+   ↓
+Classification
+   ↓
+Aggregation
+   ↓
+Feature Engineering
+   ↓
+Analytics
+```
+
+### Categorias utilizadas
+
+- `CARRO`
+- `MOTO`
+- `PESADO`
+- `IMPLEMENTO`
+- `NAO_CLASSIFICADO`
+- `OUTRO`
+
+Também existem pipelines para:
+
+- agregação por UF
+- agregação por município
+- classificação de veículos
+- distribuição da frota
+- geração de features
+- experimentos de integração com Machine Learning
 
 ## ML API
 
-A previsão está disponível por uma API FastAPI que executa o pipeline de features e o modelo TensorFlow.
+A previsão de preço é disponibilizada através de uma API FastAPI.
 
-### Execução
+Endpoint:
 
-```bash
-uvicorn ai.api.main:app --host 0.0.0.0 --port 8002
-```
+`POST /predict`
 
-A API utiliza a porta `8002`.
-
-### Health check
-
-`GET /health` verifica a disponibilidade da API e o carregamento do modelo e do pipeline.
-
-```bash
-curl http://localhost:8002/health
-```
-
-### Previsão
-
-`POST /predict` — `Content-Type: application/json`
+Exemplo:
 
 ```json
 {
@@ -111,4 +216,171 @@ Resposta:
   "model": "tensorflow"
 }
 ```
-Dados, modelos e componentes MCP serão mantidos reutilizáveis para futuras interfaces de chat, dashboards, gráficos, mapas e agentes.
+
+## MCP Server
+
+O projeto possui um MCP Server desenvolvido em TypeScript.
+
+O objetivo do MCP é transformar dados e capacidades do sistema em ferramentas estruturadas que possam futuramente ser utilizadas por Agents.
+
+### MCP Resources
+
+Atualmente:
+
+senatran://uf/{uf}
+
+Exemplo:
+
+senatran://uf/PI
+### MCP Tools
+
+#### `get_fleet_by_state`
+
+Consulta a frota de veículos de uma UF.
+
+get_fleet_by_state("PI")
+#### `compare_states`
+
+Compara a frota de duas UFs.
+
+compare_states("PI", "SP")
+#### `get_vehicle_distribution`
+
+Calcula a distribuição percentual da frota.
+
+get_vehicle_distribution("PI")
+#### `predict_vehicle_price`
+
+Utiliza o modelo de Machine Learning através da ML API.
+
+predict_vehicle_price(...)
+
+Fluxo:
+
+MCP Client
+    ↓
+MCP Server
+    ↓
+predict_vehicle_price
+    ↓
+FastAPI
+    ↓
+TensorFlow
+    ↓
+Prediction
+## MCP + Machine Learning
+
+Um dos objetivos arquiteturais do projeto é separar responsabilidades:
+
+```text
+MCP
+ └── Exposição de capacidades
+
+Analytics
+ └── Análise dos dados
+
+ML
+ └── Predições
+
+LLM / Agent
+ └── Orquestração futura
+```
+
+Dessa forma, o modelo de Machine Learning não fica acoplado diretamente ao Agent.
+
+O Agent poderá futuramente decidir quando utilizar:
+
+Vehicle Data
+Fleet Analytics
+ML Prediction
+External Data
+
+através das capacidades expostas pelo MCP.
+
+## Testing
+
+Testes automatizados e scripts de validação estão disponíveis em:
+
+tests/
+
+Exemplo:
+
+pytest
+## Running the Project
+
+### Backend
+```bash
+cd backend
+npm install
+npm run dev
+```
+
+### Frontend
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
+### ML API
+No ambiente Python configurado:
+
+```bash
+uvicorn ai.api.main:app --host 0.0.0.0 --port 8003
+```
+
+Health check:
+
+```bash
+curl http://localhost:8003/health
+```
+
+### MCP Server
+```bash
+cd backend/mcp
+
+npm install
+npm run dev
+```
+
+O servidor utiliza STDIO para comunicação MCP.
+
+Para inspeção e testes:
+
+npx @modelcontextprotocol/inspector
+
+## Tech Stack
+
+| Área | Tecnologias |
+| --- | --- |
+| Backend | Node.js, Express, Sequelize, PostgreSQL, Zod, JWT |
+| Frontend | React, Vite |
+| Data & ML | Python, Pandas, Scikit-learn, TensorFlow, FastAPI, Joblib |
+| AI Integration | Model Context Protocol, TypeScript, MCP Inspector |
+| Data Sources | SENATRAN, FIPE, IBGE |
+
+
+Este projeto é um laboratório de arquitetura para explorar a evolução de uma aplicação tradicional para uma plataforma orientada a dados e inteligência.
+
+O foco não é apenas prever preços.
+
+A proposta é construir uma arquitetura na qual:
+
+Data
+ ↓
+Analytics
+ ↓
+Machine Learning
+ ↓
+MCP
+ ↓
+LLM
+ ↓
+Agent
+
+possa ser utilizada de forma modular e evolutiva.
+
+Author: Silas Vasconcelos Cruz
+
+Full Stack Engineer | Enterprise Modernization | DevSecOps | Applied AI
+Experimental engineering project focused on Data Engineering, Machine Learning, MCP and Agentic AI architecture.
