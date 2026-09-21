@@ -32,3 +32,6 @@ file_test.py
 
 # TensorFlow / Keras
 # Modelos .keras podem ser versionados quando pequenos
+backend/mat_for_init.txt
+# Data
+ai/data/raw/
