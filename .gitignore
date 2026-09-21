@@ -35,3 +35,4 @@ file_test.py
 backend/mat_for_init.txt
 # Data
 ai/data/raw/
+*.csv
