@@ -127,24 +127,6 @@ Treinamento com:
 - Early Stopping
 - Validation split
 
-## Model Evaluation
-
-O projeto possui scripts para avaliação e análise do comportamento dos modelos:
-
-ai/evaluation/
-├── evaluate.py
-├── error_analysis.py
-├── feature_importance.py
-├── model_behavior.py
-├── model_comparison.py
-├── model_comparison_analysis.py
-├── senatran_ablation.py
-├── senatran_distribution.py
-├── senatran_experiment.py
-└── senatran_quality.py
-
-Também são mantidos artefatos de análise dos experimentos.
-
 ## SENATRAN Data Engineering
 
 O projeto utiliza dados públicos da SENATRAN para análise da frota brasileira.
