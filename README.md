@@ -67,6 +67,7 @@ Backend desenvolvido com:
 - Swagger
 
 O backend fornece a API principal da aplicação e integra o serviço de Machine Learning.
+```
 
 ## Machine Learning
 
@@ -88,6 +89,7 @@ TensorFlow Model
    ↓
 FastAPI
 ```
+
 ### Features utilizadas
 - `year`
 - `engine_cc`
@@ -132,7 +134,7 @@ Treinamento com:
 O projeto utiliza dados públicos da SENATRAN para análise da frota brasileira.
 
 ### Pipeline
-
+```text
 SENATRAN
    ↓
 Ingestion
@@ -170,12 +172,7 @@ Também existem pipelines para:
 
 A previsão de preço é disponibilizada através de uma API FastAPI.
 
-Endpoint:
-
-`POST /predict`
-
-Exemplo:
-
+Endpoint: `POST /predict`
 ```json
 {
   "make": "Toyota",
@@ -191,7 +188,6 @@ Exemplo:
 ```
 
 Resposta:
-
 ```json
 {
   "predicted_price": 102355.78,
@@ -206,39 +202,32 @@ O projeto possui um MCP Server desenvolvido em TypeScript.
 O objetivo do MCP é transformar dados e capacidades do sistema em ferramentas estruturadas que possam futuramente ser utilizadas por Agents.
 
 ### MCP Resources
-
 Atualmente:
-
+```text
 senatran://uf/{uf}
-
 Exemplo:
-
 senatran://uf/PI
+```
+
 ### MCP Tools
-
 #### `get_fleet_by_state`
-
 Consulta a frota de veículos de uma UF.
-
 get_fleet_by_state("PI")
+
+
 #### `compare_states`
-
 Compara a frota de duas UFs.
-
 compare_states("PI", "SP")
+
 #### `get_vehicle_distribution`
-
 Calcula a distribuição percentual da frota.
-
 get_vehicle_distribution("PI")
+
 #### `predict_vehicle_price`
-
 Utiliza o modelo de Machine Learning através da ML API.
-
 predict_vehicle_price(...)
 
-Fluxo:
-
+```text
 MCP Client
     ↓
 MCP Server
@@ -250,6 +239,8 @@ FastAPI
 TensorFlow
     ↓
 Prediction
+```
+
 ## MCP + Machine Learning
 
 Um dos objetivos arquiteturais do projeto é separar responsabilidades:
@@ -285,9 +276,7 @@ Testes automatizados e scripts de validação estão disponíveis em:
 
 tests/
 
-Exemplo:
-
-pytest
+Exemplo: pytest 
 ## Running the Project
 
 ### Backend
@@ -347,7 +336,7 @@ Este projeto é um laboratório de arquitetura para explorar a evolução de uma
 O foco não é apenas prever preços.
 
 A proposta é construir uma arquitetura na qual:
-
+```text
 Data
  ↓
 Analytics
@@ -359,10 +348,11 @@ MCP
 LLM
  ↓
 Agent
+```
 
 possa ser utilizada de forma modular e evolutiva.
 
-Author: Silas Vasconcelos Cruz
+### Author: Silas Vasconcelos Cruz
 
-Full Stack Engineer | Enterprise Modernization | DevSecOps | Applied AI
-Experimental engineering project focused on Data Engineering, Machine Learning, MCP and Agentic AI architecture.
+**Full Stack Engineer | Enterprise Modernization | DevSecOps | Applied AI**
+**Experimental engineering project focused on Data Engineering, Machine Learning, MCP and Agentic AI architecture.**
