@@ -1,4 +1,6 @@
+const { Op } = require("sequelize");
 const Veiculo = require("../models/Veiculo");
+const SenatranMarcaModelo = require("../models/SenatranMarcaModelo");
 const asyncHandler = require("../utils/asyncHandler");
 const NotFoundError = require("../errors/NotFoundError");
 
@@ -17,6 +19,23 @@ veiculosController.find = asyncHandler(async (req, res) => {
 });
 
 veiculosController.create = asyncHandler(async (req, res) => {
+  const { marca, modelo } = req.body;
+
+  if (marca && modelo) {
+    const senatranValido = await SenatranMarcaModelo.findOne({
+      where: {
+        marca: marca.toUpperCase().trim(),
+        modelo: { [Op.iLike]: `%${modelo.toUpperCase().trim()}%` }
+      }
+    });
+
+    if (!senatranValido) {
+      return res.status(400).json({
+        error: `A combinação Marca '${marca}' e Modelo '${modelo}' não foi encontrada na base oficial do SENATRAN.`
+      });
+    }
+  }
+
   const newVeiculo = await Veiculo.create(req.body);
   return res.status(201).json(newVeiculo);
 });
