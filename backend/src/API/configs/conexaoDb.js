@@ -1,13 +1,14 @@
 const { Sequelize } = require("sequelize");
+require("dotenv").config();
 
 const connDb = new Sequelize(
-  process.env.DB_DATABASE,
-  process.env.DB_USER,
-  process.env.DB_PASSWORD,
+  process.env.DB_DATABASE || "veiculos_db",
+  process.env.DB_USER || "postgres",
+  process.env.DB_PASSWORD || "silasvc07",
   {
-    host: process.env.DB_HOST,
-    port: process.env.DB_PORT,
-    dialect: process.env.DB_DIALECT,
+    host: process.env.DB_HOST || "localhost",
+    port: parseInt(process.env.DB_PORT, 10) || 5432,
+    dialect: process.env.DB_DIALECT || "postgres",
     logging: false,
     pool: {
       max: 10,
