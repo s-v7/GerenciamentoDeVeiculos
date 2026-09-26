@@ -10,6 +10,7 @@ const errorHandler = require("./API/middlewares/errorHandler");
 const authRoutes = require("./API/routes/authRoutes");
 const veiculosRoutes = require("./API/routes/veiculosRoutes");
 const userRoutes = require("./API/routes/userRoutes");
+const senatranRoutes = require("./API/routes/senatranRoutes");
 
 const swaggerUi = require("swagger-ui-express");
 const swaggerSpec = require("./API/configs/swagger");
@@ -45,6 +46,8 @@ app.get("/health", (req, res) => {
 app.use("/api/auth", authRoutes);
 app.use("/api/veiculos", veiculosRoutes);
 app.use("/api/usuarios", userRoutes);
+
+app.use("/api/senatran", senatranRoutes);
 
 app.use(errorHandler);
 
